@@ -1,0 +1,122 @@
+{
+  "protease_gene": "CTSC",
+  "organism": "rat",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=C01.070",
+  "positional_preferences": {
+    "P4": [
+      "D",
+      "T",
+      "G",
+      "L",
+      "H",
+      "S",
+      "A",
+      "V",
+      "Y",
+      "Q",
+      "E"
+    ],
+    "P3": [
+      "S",
+      "A",
+      "R",
+      "G",
+      "L",
+      "F",
+      "C",
+      "Y",
+      "K"
+    ],
+    "P2": [
+      "E",
+      "D",
+      "G",
+      "T",
+      "S",
+      "A",
+      "L",
+      "Y",
+      "H",
+      "Q",
+      "F",
+      "N"
+    ],
+    "P1": [
+      "E",
+      "S",
+      "R",
+      "G",
+      "F",
+      "L",
+      "K",
+      "Y",
+      "W",
+      "Q"
+    ],
+    "P1prime": [
+      "I",
+      "D",
+      "T",
+      "G",
+      "L",
+      "R",
+      "Q",
+      "S",
+      "A",
+      "M",
+      "Y",
+      "K",
+      "E"
+    ],
+    "P2prime": [
+      "I",
+      "R",
+      "S",
+      "L",
+      "F",
+      "G",
+      "Y",
+      "Q",
+      "P",
+      "V",
+      "K",
+      "E",
+      "D"
+    ],
+    "P3prime": [
+      "G",
+      "L",
+      "T",
+      "D",
+      "S",
+      "A",
+      "Y",
+      "R",
+      "F",
+      "K",
+      "Q",
+      "E"
+    ],
+    "P4prime": [
+      "G",
+      "R",
+      "S",
+      "L",
+      "Q",
+      "F",
+      "Y",
+      "K",
+      "N"
+    ]
+  }
+}

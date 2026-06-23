@@ -1,0 +1,67 @@
+{
+  "protease_gene": "ADAM28",
+  "organism": "mouse",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=M12.020",
+  "positional_preferences": {
+    "P4": [
+      "G",
+      "L",
+      "H",
+      "S"
+    ],
+    "P3": [
+      "A",
+      "H",
+      "K",
+      "R",
+      "S"
+    ],
+    "P2": [
+      "L",
+      "G",
+      "A",
+      "S"
+    ],
+    "P1": [
+      "A",
+      "R",
+      "P"
+    ],
+    "P1prime": [
+      "G",
+      "A",
+      "R",
+      "Q",
+      "S"
+    ],
+    "P2prime": [
+      "T",
+      "L",
+      "Y",
+      "K"
+    ],
+    "P3prime": [
+      "A",
+      "L",
+      "M",
+      "S",
+      "T"
+    ],
+    "P4prime": [
+      "L",
+      "H",
+      "Q",
+      "D"
+    ]
+  }
+}

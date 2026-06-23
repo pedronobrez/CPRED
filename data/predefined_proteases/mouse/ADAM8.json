@@ -1,0 +1,107 @@
+{
+  "protease_gene": "ADAM8",
+  "organism": "human",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=M12.208",
+  "positional_preferences": {
+    "P4": [
+      "L",
+      "P",
+      "S",
+      "G",
+      "A",
+      "V",
+      "R",
+      "F",
+      "K",
+      "N",
+      "E",
+      "D"
+    ],
+    "P3": [
+      "A",
+      "V",
+      "P",
+      "R",
+      "L",
+      "Q",
+      "S",
+      "W",
+      "E"
+    ],
+    "P2": [
+      "A",
+      "Q",
+      "L",
+      "K",
+      "V",
+      "M",
+      "F",
+      "H",
+      "R",
+      "E"
+    ],
+    "P1": [
+      "A",
+      "P",
+      "V",
+      "F",
+      "Q",
+      "S",
+      "G",
+      "H",
+      "E"
+    ],
+    "P1prime": [
+      "Q",
+      "V",
+      "S",
+      "G",
+      "F",
+      "A",
+      "R"
+    ],
+    "P2prime": [
+      "R",
+      "K",
+      "S",
+      "A",
+      "G",
+      "Q",
+      "T",
+      "V",
+      "Y",
+      "H"
+    ],
+    "P3prime": [
+      "S",
+      "L",
+      "A",
+      "V",
+      "R",
+      "Q",
+      "P",
+      "F",
+      "E"
+    ],
+    "P4prime": [
+      "S",
+      "R",
+      "P",
+      "Q",
+      "V",
+      "L",
+      "H",
+      "K"
+    ]
+  }
+}

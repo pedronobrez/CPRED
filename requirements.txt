@@ -1,0 +1,7 @@
+# Desktop application
+PyQt6
+PyQt6-WebEngine
+
+# Prediction engine (preserved from worker)
+requests
+biopython

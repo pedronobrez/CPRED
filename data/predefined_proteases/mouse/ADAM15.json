@@ -1,0 +1,44 @@
+{
+  "protease_gene": "ADAM15",
+  "organism": "human",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=M12.215",
+  "positional_preferences": {
+    "P4": [
+      "G"
+    ],
+    "P3": [
+      "G",
+      "H"
+    ],
+    "P2": [
+      "A",
+      "S"
+    ],
+    "P1": [
+      "H",
+      "K"
+    ],
+    "P1prime": [
+      "T"
+    ],
+    "P2prime": [
+      "T"
+    ],
+    "P3prime": [
+      "H"
+    ],
+    "P4prime": [
+      "G"
+    ]
+  }
+}

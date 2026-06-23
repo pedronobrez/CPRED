@@ -1,0 +1,58 @@
+{
+  "protease_gene": "ADAM12",
+  "organism": "mouse",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=M12.212",
+  "positional_preferences": {
+    "P4": [
+      "L",
+      "P",
+      "E"
+    ],
+    "P3": [
+      "A",
+      "P",
+      "L"
+    ],
+    "P2": [
+      "Q",
+      "A",
+      "L"
+    ],
+    "P1": [
+      "A",
+      "Q",
+      "G"
+    ],
+    "P1prime": [
+      "A",
+      "V",
+      "Q"
+    ],
+    "P2prime": [
+      "R",
+      "V",
+      "A",
+      "H"
+    ],
+    "P3prime": [
+      "S",
+      "R",
+      "A",
+      "V"
+    ],
+    "P4prime": [
+      "S",
+      "R"
+    ]
+  }
+}

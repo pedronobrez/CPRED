@@ -1,0 +1,90 @@
+{
+  "protease_gene": "ADAMTS1",
+  "organism": "human",
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "https://www.ebi.ac.uk/merops/cgi-bin/substrates?id=M12.222",
+  "positional_preferences": {
+    "P4": [
+      "V",
+      "L",
+      "I",
+      "E",
+      "S",
+      "T",
+      "F",
+      "K"
+    ],
+    "P3": [
+      "A",
+      "E",
+      "S",
+      "P",
+      "G",
+      "L",
+      "I"
+    ],
+    "P2": [
+      "Q",
+      "E",
+      "A",
+      "F",
+      "S",
+      "G",
+      "L",
+      "W",
+      "N"
+    ],
+    "P1": [
+      "E",
+      "Q",
+      "N"
+    ],
+    "P1prime": [
+      "L",
+      "A",
+      "G",
+      "F",
+      "R",
+      "Q",
+      "S"
+    ],
+    "P2prime": [
+      "R",
+      "G",
+      "L",
+      "V",
+      "I",
+      "F",
+      "K",
+      "E"
+    ],
+    "P3prime": [
+      "G",
+      "R",
+      "Q",
+      "A",
+      "E",
+      "S",
+      "T"
+    ],
+    "P4prime": [
+      "G",
+      "P",
+      "V",
+      "R",
+      "S",
+      "T",
+      "A",
+      "E"
+    ]
+  }
+}

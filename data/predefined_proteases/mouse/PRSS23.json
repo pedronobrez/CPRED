@@ -1,0 +1,25 @@
+{
+  "protease_gene": "PRSS23",
+  "organism": null,
+  "positions": [
+    "P4",
+    "P3",
+    "P2",
+    "P1",
+    "P1prime",
+    "P2prime",
+    "P3prime",
+    "P4prime"
+  ],
+  "source": "MEROPS: no PRSS23 peptidase/substrate entry found on 2026-03-13",
+  "positional_preferences": {
+    "P4": [],
+    "P3": [],
+    "P2": [],
+    "P1": [],
+    "P1prime": [],
+    "P2prime": [],
+    "P3prime": [],
+    "P4prime": []
+  }
+}
