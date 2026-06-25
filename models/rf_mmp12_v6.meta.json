@@ -1,0 +1,21 @@
+{
+  "cpred_file": "output_thr3\\site_details.csv",
+  "matches_file": "C:\\Users\\pedro\\OneDrive\\Documents\\GitHub\\TDET\\cpred_match_output_thr3_tol1\\match_results.csv",
+  "n_pos": 89,
+  "n_neg": 18121,
+  "cv_auc_mean": 0.14896627372814533,
+  "cv_auc_std": 0.08679927236932432,
+  "cv_folds": [
+    0.12009234814516218,
+    0.0677085065477147,
+    0.31707287950587376,
+    0.13209624140855258,
+    0.10786139303342351
+  ],
+  "n_estimators": 300,
+  "max_depth": 6,
+  "hard_neg_frac": 0.5,
+  "pu_learning": true,
+  "pu_c": 0.059406477032205335,
+  "feature_dims": 2586
+}

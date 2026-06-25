@@ -1,0 +1,17 @@
+{
+  "cpred_file": "output_rsa_phase1\\site_details.csv",
+  "matches_file": "C:\\Users\\pedro\\OneDrive\\Documents\\GitHub\\TDET\\real_files\\cpred_match_output_rsa_phase1\\match_results.csv",
+  "n_pos": 42,
+  "n_neg": 6424,
+  "cv_auc_mean": 0.8179640269747184,
+  "cv_auc_std": 0.07477971115170526,
+  "cv_folds": [
+    0.7001297016861219,
+    0.8390077821011673,
+    0.9320038910505837,
+    0.8248054474708172,
+    0.7938733125649013
+  ],
+  "n_estimators": 300,
+  "max_depth": 4
+}
