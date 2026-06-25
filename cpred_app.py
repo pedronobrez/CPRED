@@ -276,12 +276,14 @@ class PredictionWorker(QThread):
         organism: str,
         genes: list[str] | None = None,
         fasta_path: str | None = None,
+        model_path: str | None = None,
     ):
         super().__init__()
         self._protease   = protease
         self._organism   = organism
         self._genes      = genes
         self._fasta_path = fasta_path
+        self._model_path = model_path
 
     def run(self):
         try:
@@ -303,6 +305,7 @@ class PredictionWorker(QThread):
             "organism": self._organism,
             "genes": self._genes or [],
         })
+        result = self._apply_rf_scoring(result)
         self.done.emit(result)
 
     def _run_fasta(self, reference_sources, substrate_bank, protein_match):
@@ -334,7 +337,7 @@ class PredictionWorker(QThread):
         self.stage.emit(f"Matching {len(records)} sequence(s)…")
         match_results = protein_match.analyze_protein_records(records, generated_bank)
 
-        self.done.emit({
+        result = {
             "reference_bank": {
                 "reference": reference,
                 "positions": positions,
@@ -348,7 +351,57 @@ class PredictionWorker(QThread):
                 "protease_gene": self._protease,
                 "organism": self._organism,
             },
-        })
+        }
+        result = self._apply_rf_scoring(result)
+        self.done.emit(result)
+
+
+    # ── RF scoring (optional, requires model file) ────────────────────────────
+
+    def _apply_rf_scoring(self, result: dict) -> dict:
+        """
+        If a model path was selected, annotate sites with RSA/SS, score with
+        the chosen model, and re-sort site_results by rf_score descending.
+        Falls back silently if the model or dependencies are unavailable.
+        """
+        if not self._model_path or not os.path.exists(self._model_path):
+            return result
+
+        sites = result.get("site_results", [])
+        if not sites:
+            return result
+
+        try:
+            self.stage.emit("Annotating structures…")
+            from engine.rsa_filter import annotate_and_filter
+            sites_annotated, _ = annotate_and_filter(
+                sites, cache_dir=os.path.join(os.path.dirname(__file__), ".af_cache")
+            )
+
+            self.stage.emit("Scoring with RF model…")
+            from engine.ml_scorer import (
+                build_protein_compositions, build_protein_site_counts,
+                load_model, score_records,
+            )
+            model = load_model(self._model_path)
+            protein_compositions = build_protein_compositions(sites_annotated)
+            protein_site_counts  = build_protein_site_counts(sites_annotated)
+            score_records(
+                model, sites_annotated,
+                protein_compositions=protein_compositions,
+                protein_site_counts=protein_site_counts,
+            )
+            sites_sorted = sorted(
+                sites_annotated,
+                key=lambda s: float(s.get("rf_score") or 0),
+                reverse=True,
+            )
+            result["site_results"] = sites_sorted
+            result["rf_scored"] = True
+        except Exception:
+            pass  # degrade gracefully — GUI still works without RF scoring
+
+        return result
 
 
 class StructureFetcher(QThread):
@@ -730,7 +783,43 @@ class WelcomeWidget(QWidget):
         form_row.addStretch()
         v.addLayout(form_row)
 
-        v.addSpacing(20)
+        v.addSpacing(16)
+
+        # ── Engine selector ─────────────────────────────────────────────────
+        engine_row = QHBoxLayout()
+        engine_row.setSpacing(8)
+        engine_row.addStretch()
+        engine_lbl = QLabel("Engine")
+        engine_lbl.setObjectName("formlabel")
+        engine_row.addWidget(engine_lbl)
+        self._engine_cb = QComboBox()
+        self._engine_cb.setMinimumWidth(320)
+        self._engine_cb.setToolTip(
+            "Motif only: instant ranking by combinatorial score.\n"
+            "RF/XGB models: fetch AlphaFold structures and re-rank by ML score (slower)."
+        )
+        self._engine_cb.addItem("Motif score  —  rápida, exploratória", userData=None)
+        models_dir = os.path.join(os.path.dirname(__file__), "models")
+        _ENGINE_LABELS = {
+            "v3": "v3  RF + RSA básico  —  AUC 0.878",
+            "v4": "v4  RF + PR-AUC CV  —  AUC 0.878",
+            "v5": "v5  RF + PU Learning  —  66% recall@295 sites",
+            "v6": "v6  XGBoost + PU + n_sites  —  82% recall@146 sites  (recomendado)",
+        }
+        if os.path.isdir(models_dir):
+            import glob as _glob
+            for pkl in sorted(_glob.glob(os.path.join(models_dir, "rf_mmp12_v*.pkl"))):
+                vname = os.path.basename(pkl).replace("rf_mmp12_", "").replace(".pkl", "")
+                label = _ENGINE_LABELS.get(vname, vname)
+                self._engine_cb.addItem(label, userData=pkl)
+        # pre-select the last (best) model if available
+        if self._engine_cb.count() > 1:
+            self._engine_cb.setCurrentIndex(self._engine_cb.count() - 1)
+        engine_row.addWidget(self._engine_cb)
+        engine_row.addStretch()
+        v.addLayout(engine_row)
+
+        v.addSpacing(16)
 
         self._run_btn = QPushButton("Run Prediction")
         self._run_btn.setObjectName("analyze")
@@ -793,26 +882,18 @@ class WelcomeWidget(QWidget):
         self._run_btn.setEnabled(ok)
 
     def _emit_run(self):
-        organism = self._org_cb.currentData() or ""
-        protease = self._prot_cb.currentText()
-        mode     = self._input_stack.currentIndex()
+        organism   = self._org_cb.currentData() or ""
+        protease   = self._prot_cb.currentText()
+        mode       = self._input_stack.currentIndex()
+        model_path = self._engine_cb.currentData()  # None = motif only
 
+        base = {"protease": protease, "organism": organism, "model_path": model_path}
         if mode == 0:
             raw   = self._genes_edit.toPlainText()
             genes = [g.strip() for g in re.split(r"[,\n]+", raw) if g.strip()]
-            self.predictionReady.emit({
-                "protease": protease,
-                "organism": organism,
-                "genes": genes,
-                "fasta_path": None,
-            })
+            self.predictionReady.emit({**base, "genes": genes, "fasta_path": None})
         else:
-            self.predictionReady.emit({
-                "protease": protease,
-                "organism": organism,
-                "genes": None,
-                "fasta_path": self._fasta_path,
-            })
+            self.predictionReady.emit({**base, "genes": None, "fasta_path": self._fasta_path})
 
     def _toggle_theme(self):
         self._dark = not self._dark
@@ -884,6 +965,7 @@ class LoadingWidget(QWidget):
             organism   = params["organism"],
             genes      = params.get("genes"),
             fasta_path = params.get("fasta_path"),
+            model_path = params.get("model_path"),
         )
         self._worker.stage.connect(self._on_stage)
         self._worker.done.connect(self.done)
@@ -1107,13 +1189,17 @@ class ViewerWidget(QWidget):
         for r in self._ranking:
             gene_by_id[r["id"]] = r.get("gene") or r["id"]
 
+        rf_available = any("rf_score" in s for s in sites)
         for site in sites:
             pid   = site["protein_id"]
             gene  = gene_by_id.get(pid, pid)
             seq   = site["site_seq"]
-            score = site["motif_score"]
             window_str = f"{seq[:4]}|{seq[4:]}"
-            label = f"{gene}   {window_str}   score={score:.2f}"
+            if rf_available and site.get("rf_score") is not None:
+                score_str = f"rf={float(site['rf_score']):.3f}"
+            else:
+                score_str = f"score={float(site['motif_score']):.2f}"
+            label = f"{gene}   {window_str}   {score_str}"
             item  = QListWidgetItem(label)
             item.setData(Qt.ItemDataRole.UserRole, site)
             self._list.addItem(item)

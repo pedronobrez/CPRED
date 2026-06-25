@@ -324,7 +324,7 @@ def export_site_results_csv(
     output_path = Path(output_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
 
-    field_names = [
+    base_fields = [
         "protein_id",
         "site_index",
         "start_0based",
@@ -336,25 +336,35 @@ def export_site_results_csv(
         "motif_score",
         "top_hits_motif",
     ]
+    # Append RSA and RF columns only when present in the first record
+    extra_fields: list[str] = []
+    if site_results:
+        first = site_results[0]
+        for col in ("rsa_p1", "rsa_p1prime", "rsa_mean", "rsa_accessible", "rf_score"):
+            if col in first:
+                extra_fields.append(col)
+
+    field_names = base_fields + extra_fields
 
     with output_path.open("w", newline="") as handle:
         writer = csv.writer(handle)
         writer.writerow(field_names)
         for site_result in site_results:
-            writer.writerow(
-                [
-                    site_result["protein_id"],
-                    site_result["site_index"],
-                    site_result["start_0based"],
-                    site_result["end_0based"],
-                    site_result["start_1based"],
-                    site_result["end_1based"],
-                    site_result["site_seq"],
-                    site_result["motif"],
-                    site_result["motif_score"],
-                    site_result["top_hits_motif"],
-                ]
-            )
+            row = [
+                site_result["protein_id"],
+                site_result["site_index"],
+                site_result["start_0based"],
+                site_result["end_0based"],
+                site_result["start_1based"],
+                site_result["end_1based"],
+                site_result["site_seq"],
+                site_result["motif"],
+                site_result["motif_score"],
+                site_result["top_hits_motif"],
+            ]
+            for col in extra_fields:
+                row.append(site_result.get(col, ""))
+            writer.writerow(row)
 
 
 def export_match_results(

@@ -8,6 +8,7 @@ from Bio import SeqIO
 
 
 UNIPROT_STREAM_URL = "https://rest.uniprot.org/uniprotkb/stream"
+_GENE_BATCH_SIZE = 50  # max genes per UniProt query to stay under URL length limits
 
 _ORGANISM_ALIASES = {
     "human": "Homo sapiens",
@@ -220,17 +221,29 @@ def fetch_proteins_by_genes(
 ) -> list[dict[str, Any]]:
     """
     Fetch UniProt proteins and return normalized in-memory records.
+    Large gene lists are split into batches of _GENE_BATCH_SIZE to avoid
+    UniProt 400 errors caused by excessively long query URLs.
     """
-    fasta_text = fetch_uniprot_fasta(
-        organism=organism,
-        genes=genes,
-        reviewed=reviewed,
-        include_isoforms=include_isoforms,
-        timeout=timeout,
-    )
-    records = parse_fasta_records(fasta_text)
-    normalized_records = [normalize_uniprot_record(record) for record in records]
-    filtered_records = _filter_records_by_requested_genes(normalized_records, genes)
+    cleaned = _clean_genes(genes)
+    batches = [
+        cleaned[i: i + _GENE_BATCH_SIZE]
+        for i in range(0, max(len(cleaned), 1), _GENE_BATCH_SIZE)
+    ]
+
+    all_normalized: list[dict[str, Any]] = []
+    for batch_idx, batch in enumerate(batches, start=1):
+        print(f"[uniprot] batch {batch_idx}/{len(batches)} ({len(batch)} genes)")
+        fasta_text = fetch_uniprot_fasta(
+            organism=organism,
+            genes=batch,
+            reviewed=reviewed,
+            include_isoforms=include_isoforms,
+            timeout=timeout,
+        )
+        records = parse_fasta_records(fasta_text)
+        all_normalized.extend(normalize_uniprot_record(r) for r in records)
+
+    filtered_records = _filter_records_by_requested_genes(all_normalized, cleaned)
     returned_gene_names = sorted({record["gene"] for record in filtered_records})
     print(f"[uniprot] returned records: {len(filtered_records)}")
     print(f"[uniprot] returned genes: {returned_gene_names}")
