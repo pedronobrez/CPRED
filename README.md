@@ -19,8 +19,8 @@ Web tool for background protease substrate prediction workflows, with Google log
 
 ```bash
 # Clone the repo and start everything
-git clone https://github.com/pedronobrez/CPRED-local.git
-cd CPRED-local
+git clone https://github.com/pedronobrez/CPRED.git
+cd CPRED
 docker compose up --build
 ```
 
