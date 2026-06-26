@@ -1,3 +1,6 @@
+# Claude context
+CLAUDE.md
+
 # Python
 __pycache__/
 *.pyc
@@ -25,3 +28,20 @@ Thumbs.db
 
 # Logs
 *.log
+
+# AlphaFold PDB cache (regenerable)
+.af_cache/
+
+# CPRED prediction outputs
+output_*/
+
+# ML evaluation outputs
+eval_rf*/
+
+# Presentation one-off scripts
+build_pptx.py
+_read_ref_pptx.py
+cpred_deck.js
+make_deck.py
+CPRED_project_overview.pptx
+_genes_list.txt
